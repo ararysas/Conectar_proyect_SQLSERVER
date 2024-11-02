@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:paddingTop="24dp"
+    android:paddingBottom="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:elevation="4dp"
+         >
+
+        <!-- Encabezado -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:background="#4CAF50"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+           >
+
+            <!-- Ícono a la izquierda -->
+            <ImageView
+                android:id="@+id/iconoIzquierda"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+            android:src="@drawable/iconoarary" />
+
+            <!-- Título del encabezado -->
+            <TextView
+                android:id="@+id/tituloTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalles del Usuario"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_toEndOf="@id/iconoIzquierda"
+                android:layout_marginStart="16dp"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+
+        <!-- Contenedor para detalles del usuario (fondo blanco) -->
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/white"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp">  <!-- Fondo blanco para el contenedor -->
+
+            <!-- Nombre y Apellido en una fila horizontal -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/nombreTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre:"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/apellidoTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Apellido"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/coTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CO"
+                    android:textSize="16sp"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- ID Usuario -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ID Usuario:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/idTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12345"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray" />
+            </LinearLayout>
+
+            <!-- Correo electrónico -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/emailTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ejemplo@correo.com"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray" />
+            </LinearLayout>
+
+            <!-- Contraseña -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contraseña:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/contraseñaTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ContraseñaEncriptada"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray" />
+            </LinearLayout>
+
+            <!-- Estado Activo/Inactivo -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estado:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/activoTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Activo"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/holo_green_dark" />
+            </LinearLayout>
+
+            <!-- Fecha de creación -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fecha de Creación:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/fechaCreaTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="01/01/2024"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray" />
+            </LinearLayout>
+
+            <!-- Rol del Usuario -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rol:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/rolTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Admin"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray" />
+            </LinearLayout>
+
+            <!-- Movimiento -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Movimiento:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/movimientoTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MovimientoDesdeBaseDeDatos"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray" />
+            </LinearLayout>
+
+            <!-- Tiempo de Espera -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tiempo de Espera:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/tiempoEsperaTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10 minutos"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <!-- Smartphone -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Smartphone:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/smartphoneTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Samsung Galaxy"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <!-- Hora de Inicio -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hora de Inicio:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/horaInicioTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="08:00"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray" />
+            </LinearLayout>
+
+            <!-- Hora Final -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hora Final:"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/horaFinalTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="17:00"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/darker_gray" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <!-- Botón Seguir -->
+        <Button
+            android:id="@+id/botonSeguir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seguir Usuario"
+            android:textColor="@android:color/white"
+            android:background="#4CAF50"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:padding="12dp" />
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".MainActivity">
+
+
+    <!-- Imagen debajo del texto de bienvenida -->
+    <ImageView
+        android:id="@+id/welcomeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/iconoarary"
+        android:contentDescription="Imagen de bienvenida"
+        android:adjustViewBounds="true"
+        android:maxWidth="200dp"
+        android:maxHeight="200dp" />
+
+
+    <!-- Campo de Nombre -->
+    <EditText
+        android:id="@+id/nameField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/border_edittext"
+        android:hint="Nombre"
+        android:inputType="textPersonName"
+        android:minHeight="50dp"
+        android:padding="20dp"
+        android:textColor="#000000" />
+
+    <!-- Campo de Contraseña -->
+    <EditText
+        android:id="@+id/passwordField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/border_edittext"
+        android:hint="Contraseña"
+        android:inputType="textPassword"
+        android:minHeight="48dp"
+        android:padding="15dp"
+        android:textColor="#000000" />
+
+    <!-- Botón de inicio de sesión -->
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:background="#4CAF50"
+        android:minHeight="48dp"
+        android:padding="20dp"
+        android:text="Iniciar Sesión"
+        android:textColor="#FFFFFF"
+        android:visibility="visible" />
+</LinearLayout>

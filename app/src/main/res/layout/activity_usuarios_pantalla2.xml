@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="30dp"
+    >
+
+    <!-- Contenedor principal de título e ícono -->
+
+    <!-- RecyclerView para la lista de usuarios -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:background="#4CAF50"
+        android:padding="16dp"
+
+        android:textColor="#FFFFFF">
+
+        <!-- Ícono a la izquierda -->
+        <ImageView
+            android:id="@+id/iconoIzquierda"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/iconoarary" />
+
+        <!-- Título centrado en el RelativeLayout -->
+        <TextView
+            android:id="@+id/homeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Usuarios"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewUsuarios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="100dp"
+        android:filterTouchesWhenObscured="true"
+        android:textStyle="bold" />
+
+</LinearLayout>

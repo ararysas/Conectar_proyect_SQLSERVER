@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white"
+    android:elevation="4dp"
+    android:layout_marginBottom="10dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
+
+    <!-- Color de texto negro -->
+
+    <TextView
+        android:id="@+id/nombreCompletoTextView"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/apellidoTextView"
+        android:layout_width="337dp"
+        android:layout_height="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" /> <!-- Color de texto negro -->
+
+    <TextView
+        android:id="@+id/emailTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@android:color/black" /> <!-- Color de texto negro -->
+
+    <!-- Otros TextViews para información adicional del usuario -->
+
+</LinearLayout>
