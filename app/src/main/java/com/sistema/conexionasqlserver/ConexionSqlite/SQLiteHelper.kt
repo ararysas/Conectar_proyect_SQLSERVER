@@ -7,24 +7,27 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+
 class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_NAME = "locations.db"
-        private const val DATABASE_VERSION = 2
-        private const val TABLE_LOCATIONS = "locations"
+        private const val DATABASE_NAME = "trakim.db"
+        private const val DATABASE_VERSION = 3
+        private const val TABLE_TRAKIM = "t010_trakim"  // Nombre de la tabla
 
+        // Definición de las columnas con prefijo f010_
         private const val COLUMN_ID = "id"
-        private const val COLUMN_USER_ID = "user_id"
-        private const val COLUMN_COORDINATES = "coordinates"
-        private const val COLUMN_DATE = "date"
-        private const val COLUMN_NOTE = "note"
-        private const val COLUMN_CODE = "code"
+        private const val COLUMN_USER_ID = "f010_ID_User"
+        private const val COLUMN_COORDINATES = "f010_Coordenadas"
+        private const val COLUMN_DATE = "f010_Fecha"
+        private const val COLUMN_NOTE = "f010_Nota"
+        private const val COLUMN_CODE = "f010_codigo"
     }
 
+    // Creación de la tabla t010_trakim
     override fun onCreate(db: SQLiteDatabase) {
         val createTable = """
-            CREATE TABLE $TABLE_LOCATIONS (
+            CREATE TABLE $TABLE_TRAKIM (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_USER_ID INTEGER,
                 $COLUMN_COORDINATES TEXT,
@@ -34,16 +37,17 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             )
         """.trimIndent()
         db.execSQL(createTable)
-        Log.d("SQLiteHelper", "Tabla creada exitosamente.")
+        Log.d("SQLiteHelper", "Tabla $TABLE_TRAKIM creada exitosamente.")
     }
 
+    // Actualización de la base de datos
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_LOCATIONS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_TRAKIM")
         Log.d("SQLiteHelper", "Base de datos actualizada de la versión $oldVersion a la versión $newVersion.")
         onCreate(db)
     }
 
-    // Insertar una ubicación y comprobar si fue exitoso
+    // Método para insertar una ubicación
     fun insertLocation(userId: Int, coordinates: String, date: String, note: String, code: Int): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -55,7 +59,7 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         }
 
         return try {
-            val result = db.insert(TABLE_LOCATIONS, null, values)
+            val result = db.insert(TABLE_TRAKIM, null, values)
             if (result == -1L) {
                 Log.e("SQLiteHelper", "Error al insertar la ubicación en la base de datos.")
                 false
@@ -71,13 +75,13 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         }
     }
 
-    // Recuperar ubicaciones pendientes
+    // Método para obtener ubicaciones pendientes
     suspend fun getPendingLocations(): List<LocationData> {
         val locationsList = mutableListOf<LocationData>()
 
         withContext(Dispatchers.IO) {
             val db = readableDatabase
-            val query = "SELECT * FROM $TABLE_LOCATIONS"
+            val query = "SELECT * FROM $TABLE_TRAKIM"
             db.rawQuery(query, null).use { cursor ->
                 while (cursor.moveToNext()) {
                     val location = LocationData(
@@ -97,11 +101,11 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return locationsList
     }
 
-    // Eliminar una ubicación de la base de datos
+    // Método para eliminar una ubicación
     suspend fun deleteLocation(location: LocationData): Boolean {
         val db = writableDatabase
         return try {
-            val result = db.delete(TABLE_LOCATIONS, "$COLUMN_ID=?", arrayOf(location.id.toString()))
+            val result = db.delete(TABLE_TRAKIM, "$COLUMN_ID=?", arrayOf(location.id.toString()))
             if (result > 0) {
                 Log.d("SQLiteHelper", "Ubicación eliminada exitosamente con ID: ${location.id}")
                 true

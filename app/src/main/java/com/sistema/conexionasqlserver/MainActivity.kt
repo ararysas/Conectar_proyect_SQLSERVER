@@ -6,41 +6,65 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.sistema.conexionasqlserver.Usuarios.LoginActivity
-import java.util.concurrent.TimeUnit
 
+import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity() {
 
     private lateinit var gpsRequestHelper: GPSRequestHelper
-    private lateinit var connectionManager: ConnectionManager
+    private lateinit var locationManagerHelper: LocationManagerHelper
+    private lateinit var usuarioViewModel: UsuarioViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Inicializar SQLiteHelper (asegúrate de que esta clase esté bien implementada)
-
+        // Inicializar el LocationManagerHelper con el contexto
+        LocationManagerHelper.initialize(this)
 
         // Inicializar el GPSRequestHelper
         gpsRequestHelper = GPSRequestHelper(this)
 
-        // Inicializar el ConnectionManager
-        connectionManager = ConnectionManager(this)
+        // Inicializar el LocationManagerHelper
+        locationManagerHelper = LocationManagerHelper
+
+        // Inicializar el ViewModel
+        usuarioViewModel = ViewModelProvider(this).get(UsuarioViewModel::class.java)
 
         // Verificar si ya existe una sesión
         val sharedPreferences: SharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         val userId = sharedPreferences.getInt("USER_ID", -1)
 
         if (userId != -1) {
-            // Si el usuario ya está logueado, solicitar permisos de ubicación
-            connectionManager.requestLocationPermission {
-                startLocationService(userId) // Iniciar servicio de ubicación con el userId
+            // Si el usuario ya está logueado, obtener el usuario y verificar su rol
+            usuarioViewModel.obtenerUsuarioPorId(this, userId)
+
+            // Observar cambios en el usuario LiveData
+            usuarioViewModel.usuarioLiveData.observe(this) { usuario ->
+                usuario?.let {
+                    if (it.rol == 1) {
+                        // Si el rol es 1, continuar con la actividad principal
+                        locationManagerHelper.requestLocationPermission(this) {
+                            // Callback cuando los permisos son concedidos
+                            startLocationService(userId)
+                        }
+                    } else {
+                        // Si el rol no es 1, redirigir a otra actividad o mostrar mensaje
+                        Log.d("MainActivity", "Acceso restringido para el usuario con rol: ${it.rol}")
+                        Toast.makeText(this, "Acceso restringido para usuarios con rol distinto a 1.", Toast.LENGTH_SHORT).show()
+
+                        // Redirigir a LoginActivity
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        finish()
+                    }
+                }
             }
         } else {
             // Si no hay sesión, redirigir a LoginActivity
-            val intent = Intent(this, LoginActivity::class.java) // Asegúrate de que LoginActivity esté importada
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish() // Finaliza MainActivity si se redirige
         }
@@ -63,10 +87,14 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences: SharedPreferences = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
         val userId = sharedPreferences.getInt("USER_ID", -1)
 
-        connectionManager.handlePermissionsResult(requestCode, grantResults) {
+        locationManagerHelper.handlePermissionsResult(requestCode, grantResults) {
             // Permiso concedido, verifica el GPS y la conexión a Internet antes de iniciar el servicio
             if (userId != -1) {
-                startLocationService(userId) // Se invoca con el userId
+                startLocationService(userId)
+            } else {
+                Log.d("MainActivity", "Usuario no logueado, redirigiendo a LoginActivity.")
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
             }
         }
     }
@@ -74,9 +102,10 @@ class MainActivity : AppCompatActivity() {
     // Método para iniciar el servicio de ubicación
     private fun startLocationService(userId: Int) {
         // Verificar que el GPS esté habilitado y que haya conexión a Internet
-        if (connectionManager.isGPSEnabled() && connectionManager.isInternetAvailable()) {
+        if (LocationManagerHelper.isGPSOn(this) && LocationManagerHelper.isInternetAvailable(this)) {
             Log.d("MainActivity", "Iniciando servicio de ubicación para el usuario: $userId")
             // Aquí puedes agregar la lógica para iniciar el servicio de ubicación
+            // Ejemplo: startService(Intent(this, LocationService::class.java))
         } else {
             Toast.makeText(this, "GPS desactivado o Internet no disponible.", Toast.LENGTH_SHORT).show()
         }

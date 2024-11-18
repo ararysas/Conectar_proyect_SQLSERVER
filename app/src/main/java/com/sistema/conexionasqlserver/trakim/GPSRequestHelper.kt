@@ -1,24 +1,23 @@
 package com.sistema.conexionasqlserver
 
-import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 
-import com.sistema.conexionasqlserver.SincronizarTrakim
-
-class GPSRequestHelper(private val activity: Activity) {
-    private val connectionManager = ConnectionManager(activity)
+class GPSRequestHelper(private val activity: AppCompatActivity) {  // Cambiar a AppCompatActivity
 
     fun iniciarVerificacionGPS(userId: Int) {
-        connectionManager.requestLocationPermission {
+        // Solicitar permisos de ubicación
+        LocationManagerHelper.requestLocationPermission(activity) {
             verificarGPS(userId)
         }
     }
 
     private fun verificarGPS(userId: Int) {
         Log.d("GPSRequestHelper", "Iniciando verificación de GPS.")
-        if (!connectionManager.isGPSEnabled()) {
+        // Aquí se usa el método isGPSOn correctamente
+        if (!LocationManagerHelper.isGPSOn(activity)) {
             Toast.makeText(activity, "Por favor, habilita el GPS.", Toast.LENGTH_SHORT).show()
             // Aquí podrías abrir la configuración del GPS si es necesario
         } else {

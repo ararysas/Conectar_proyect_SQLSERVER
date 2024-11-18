@@ -2,6 +2,7 @@ package com.sistema.conexionasqlserver
 
 import android.content.Context
 import android.location.Location
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.location.LocationManager
@@ -12,6 +13,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AppCompatActivity
 
 object LocationManagerHelper {
 
@@ -21,12 +24,6 @@ object LocationManagerHelper {
     fun initialize(context: Context) {
         sqliteHelper = SQLiteHelper(context)
         Log.d("LocationManagerHelper", "SQLiteHelper inicializado.")
-    }
-
-
-    // Nuevo método para obtener la instancia de SQLiteHelper
-    fun getSQLiteHelper(): SQLiteHelper {
-        return sqliteHelper
     }
 
     // Verifica si el GPS está encendido
@@ -43,6 +40,26 @@ object LocationManagerHelper {
         val activeNetwork = connectivityManager.activeNetwork ?: return false
         val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    // Solicitar permisos de ubicación
+    fun requestLocationPermission(activity: AppCompatActivity, onPermissionGranted: () -> Unit) {
+        if (ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        } else {
+            onPermissionGranted()
+        }
+    }
+
+    // Manejar el resultado de los permisos
+    fun handlePermissionsResult(requestCode: Int, grantResults: IntArray, onPermissionGranted: () -> Unit) {
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                onPermissionGranted()
+            } else {
+                Log.e("LocationManagerHelper", "Permiso de ubicación denegado.")
+            }
+        }
     }
 
     // Guarda la ubicación localmente en SQLite
@@ -72,10 +89,7 @@ object LocationManagerHelper {
     // Función que envía la ubicación al servidor
     suspend fun enviarAlServidor(location: LocationData): Boolean {
         return try {
-            // Aquí deberías implementar la lógica de envío al servidor.
-            // Ejemplo: Usa Retrofit o HttpURLConnection para hacer la llamada HTTP
-
-            // Simulación de éxito del envío
+            // Implementar lógica de envío al servidor
             Log.d("LocationManagerHelper", "Simulación de envío exitoso de la ubicación: ${location.coordinates}")
             true
         } catch (e: Exception) {
@@ -90,10 +104,9 @@ object LocationManagerHelper {
         val pendingLocations = sqliteHelper.getPendingLocations()
 
         for (location in pendingLocations) {
-            val success = enviarAlServidor(location) // Aquí envías la ubicación sin modificar
+            val success = enviarAlServidor(location)
 
             if (success) {
-                // Si el envío es exitoso, eliminar la ubicación de SQLite
                 try {
                     sqliteHelper.deleteLocation(location)
                     Log.d("LocationManagerHelper", "Ubicación enviada y eliminada con éxito de SQLite.")
@@ -115,4 +128,6 @@ object LocationManagerHelper {
         Log.d("LocationManagerHelper", "Intentando enviar ubicaciones pendientes.")
         sendPendingLocationsToServer(userId)
     }
+
+    private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
 }

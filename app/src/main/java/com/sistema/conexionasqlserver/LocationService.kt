@@ -9,7 +9,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.location.Location
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.IBinder
 import android.os.Looper
@@ -19,7 +18,6 @@ import com.google.android.gms.location.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 class LocationService : Service() {
 
@@ -85,7 +83,8 @@ class LocationService : Service() {
 
     private fun saveLocation(userId: Int, nota: String, codigo: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            if (isWithinRestrictedHours()) {
+            // Verificar si está dentro del horario restringido usando UserTimeZoneHelper
+            if (UserTimeZoneHelper.isWithinRestrictedHours(applicationContext, userId)) {
                 val userTracker = userTrackers[userId]
                 userTracker?.lastLocation?.let { lastLocation ->
                     when {
@@ -95,10 +94,9 @@ class LocationService : Service() {
                         }
                         !LocationManagerHelper.isGPSOn(this@LocationService) -> {
                             Log.d("LocationService", "GPS no está habilitado. Guardando ubicación localmente con código 5.")
-                            LocationManagerHelper.saveLocationLocally(this@LocationService, userId, lastLocation, nota) // Código 6 para "sin GPS"
+                            LocationManagerHelper.saveLocationLocally(this@LocationService, userId, lastLocation, nota)
                         }
                         else -> {
-
                             DatabaseHelper.saveLocation(userId, lastLocation.latitude, lastLocation.longitude, nota, codigo)
                             Log.d("LocationService", "Ubicación guardada exitosamente para el usuario $userId: $nota con código $codigo.")
                         }
@@ -110,20 +108,6 @@ class LocationService : Service() {
                 Log.d("LocationService", "No se guardará la ubicación: estamos fuera del rango restringido.")
             }
         }
-    }
-
-    private fun isWithinRestrictedHours(): Boolean {
-        val calendar = Calendar.getInstance()
-        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
-        val currentMinute = calendar.get(Calendar.MINUTE)
-
-        // Rango de horas restringido (8:00 AM a 6:00 PM)
-        val startHour = 8  // 8 AM
-        val endHour = 18    // 6 PM
-
-        // Verificar si la hora actual está dentro del rango restringido
-        return (currentHour == startHour && currentMinute >= 0) ||
-                (currentHour in startHour + 1 until endHour)  // Desde la 1 PM hasta antes de las 6 PM
     }
 
     private fun checkUserCredentials() {
@@ -199,7 +183,7 @@ class LocationService : Service() {
         private fun startLocationUpdates(fusedLocationClient: FusedLocationProviderClient) {
             val locationRequest = LocationRequest.Builder(
                 Priority.PRIORITY_HIGH_ACCURACY,
-                10 * 60 * 1000L // 10 minutos, puedes ajustar esto
+                10 * 60 * 1000L
             ).apply {
                 setMinUpdateIntervalMillis(5000L)
             }.build()

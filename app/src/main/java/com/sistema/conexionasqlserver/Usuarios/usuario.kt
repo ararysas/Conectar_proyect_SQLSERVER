@@ -3,7 +3,7 @@ package com.sistema.conexionasqlserver.Usuarios
 import java.io.Serializable
 
 data class Usuario(
-    val id: String,
+    val id: Int,
     val nombre: String,
     val apellido: String,
     val contraseña: String,
@@ -13,7 +13,7 @@ data class Usuario(
     val rol: Int,
     val movimiento: Int,
     val tiempoEspera: Int,
-    val co: Int,
+    val co: String,
     val smartphone: String,
     val horaInicio: Int,  // Nuevo campo
     val horaFinal: Int,

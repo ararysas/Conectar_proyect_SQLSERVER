@@ -1,6 +1,10 @@
 package com.sistema.conexionasqlserver.Usuarios
 
 import android.content.Intent
+import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,15 +42,29 @@ class UsuarioAdapter(private val usuarios: List<Usuario>) : RecyclerView.Adapter
         return UsuarioViewHolder(itemView)
     }
 
-    // Vincular datos al ViewHolder
+    // Vincular datos al ViewHolder con color específico para 'co'
     override fun onBindViewHolder(holder: UsuarioViewHolder, position: Int) {
         val currentUser = usuarios[position]
-        holder.nombreCompletoTextView.text = "${currentUser.nombre} ${currentUser.apellido}" // Concatenar nombre y apellido
+
+        // Crear el texto concatenado de co, nombre y apellido
+        val completoTexto = "${currentUser.co} ${currentUser.nombre} ${currentUser.apellido}"
+
+        // Crear un SpannableString para personalizar los colores
+        val spannable = SpannableString(completoTexto)
+
+
+        val coLength = currentUser.co.toString().length
+        spannable.setSpan(
+            ForegroundColorSpan(Color.parseColor("#4CAF50")),
+            0,
+            coLength,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        // Asignar el SpannableString al TextView
+        holder.nombreCompletoTextView.text = spannable
     }
 
     // Devolver el número total de elementos
     override fun getItemCount() = usuarios.size
 }
-
-// Este archivo es el adaptador para el RecyclerView. Conecta los datos de los usuarios
-// con la vista de la lista, asegurando que cada usuario se muestre correctamente.

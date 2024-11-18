@@ -7,4 +7,5 @@ class DatabaseConfig {
             const val DB_PASSWORD = "4r4r1.wifi"
         }
 
+
 }

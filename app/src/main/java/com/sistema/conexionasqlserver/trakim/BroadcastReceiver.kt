@@ -28,7 +28,7 @@ class BootReceiver : BroadcastReceiver() {
                 val userId = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
                     .getInt("USER_ID", -1)
                 if (userId != -1) {
-                    saveSystemEventToDatabase(context, userId, "Dipositivo Iniciado", 4)
+                    saveSystemEventToDatabase(context, userId, "Dispositivo Iniciado", 4)
                 }
             }
             Intent.ACTION_SHUTDOWN -> {
@@ -77,11 +77,9 @@ class BootReceiver : BroadcastReceiver() {
         }
     }
 
-
     private fun saveSystemEventToDatabase(context: Context, userId: Int, nota: String, codigo: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             DatabaseHelper.saveLocation(userId, 0.0, 0.0, nota, codigo)
         }
-
     }
 }

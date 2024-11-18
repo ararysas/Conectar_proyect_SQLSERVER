@@ -53,6 +53,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.work:work-runtime-ktx:2.8.1")
+    // Agregar dependencias para ViewModel y LiveData
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")  // Usa la versión correspondiente
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

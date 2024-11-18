@@ -1,5 +1,6 @@
 package com.sistema.conexionasqlserver.Usuarios
 
+import com.sistema.conexionasqlserver.MainActivity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -34,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
             Log.d("Login", "Intentando iniciar sesión con: $username")
 
+            // Verificar que los campos no estén vacíos
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 autenticarUsuario(username, password)
             } else {
@@ -47,14 +49,24 @@ class LoginActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             Log.d("Login", "Autenticando usuario: $username")
 
-            val isAuthenticated = DatabaseHelper.validarUsuario(username, password)
+            // Validar usuario y obtener el rol
+            val (isAuthenticated, role) = DatabaseHelper.validarUsuario(username, password)
 
             withContext(Dispatchers.Main) {
                 if (isAuthenticated) {
                     Log.d("Login", "Inicio de sesión exitoso para: $username")
-                    val intent = Intent(this@LoginActivity, UsuariosPantalla2Activity::class.java)
-                    startActivity(intent)
-                    finish()
+
+                    // Verificar si el rol es 1
+                    if (role == 1) {
+                        // Si el rol es 1, redirigir a Pantalla2Activity
+                        val intent = Intent(this@LoginActivity,UsuariosPantalla2Activity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        // Si el rol no es 1, mostrar mensaje de acceso restringido
+                        Log.d("Login", "Acceso restringido para el usuario con rol: $role")
+                        Toast.makeText(this@LoginActivity, "Acceso restringido para este Usuario.", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     Log.d("Login", "Usuario o contraseña incorrectos: $username")
                     Toast.makeText(this@LoginActivity, "Nombre de usuario o contraseña incorrectos.", Toast.LENGTH_SHORT).show()

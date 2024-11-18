@@ -14,12 +14,22 @@ object DatabaseHelper {
     private const val DB_USER = DatabaseConfig.DB_USER
     private const val DB_PASSWORD = DatabaseConfig.DB_PASSWORD
 
+    // Bloque de inicialización para cargar el driver JDBC solo una vez
+    init {
+        try {
+            // Cargar el driver JDBC solo una vez cuando se inicializa la clase DatabaseHelper
+            Class.forName("net.sourceforge.jtds.jdbc.Driver")
+            Log.d("DatabaseHelper", "Driver JDBC cargado correctamente.")
+        } catch (e: ClassNotFoundException) {
+            Log.e("DatabaseHelper", "Error al cargar el driver: ${e.message}", e)
+        }
+    }
+
     // Método para guardar la ubicación en la base de datos remota
     suspend fun saveLocation(userId: Int, latitude: Double, longitude: Double, nota: String, codigo: Int): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 Log.d("DatabaseHelper", "Intentando conectar con la base de datos.")
-                Class.forName("net.sourceforge.jtds.jdbc.Driver")
                 DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD).use { connection ->
                     Log.d("DatabaseHelper", "Conexión establecida.")
 
@@ -48,9 +58,6 @@ object DatabaseHelper {
                 }
             } catch (e: SQLException) {
                 Log.e("DatabaseError", "Error SQL: ${e.message}", e)
-                return@withContext false
-            } catch (e: ClassNotFoundException) {
-                Log.e("DatabaseError", "Error al cargar el driver: ${e.message}", e)
                 return@withContext false
             } catch (e: Exception) {
                 Log.e("DatabaseError", "Error inesperado: ${e.message}", e)
@@ -90,7 +97,6 @@ object DatabaseHelper {
     suspend fun getUserSettings(userId: Int): UserSettings? {
         return withContext(Dispatchers.IO) {
             try {
-                Class.forName("net.sourceforge.jtds.jdbc.Driver")
                 DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD).use { connection ->
                     val query = """
                         SELECT f001_Tiempo_espera, f001_movimiento 
@@ -113,9 +119,6 @@ object DatabaseHelper {
             } catch (e: SQLException) {
                 Log.e("DatabaseError", "Error SQL: ${e.message}", e)
                 null
-            } catch (e: ClassNotFoundException) {
-                Log.e("DatabaseError", "Error al cargar el driver: ${e.message}", e)
-                null
             } catch (e: Exception) {
                 Log.e("DatabaseError", "Error inesperado: ${e.message}", e)
                 null
@@ -127,7 +130,6 @@ object DatabaseHelper {
     suspend fun getLastCoordinates(userId: Int): String? {
         return withContext(Dispatchers.IO) {
             try {
-                Class.forName("net.sourceforge.jtds.jdbc.Driver")
                 DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD).use { connection ->
                     val query = """
                         SELECT TOP 1 f010_Coordenadas
@@ -148,22 +150,21 @@ object DatabaseHelper {
             } catch (e: SQLException) {
                 Log.e("DatabaseError", "Error SQL: ${e.message}", e)
                 null
-            } catch (e: ClassNotFoundException) {
-                Log.e("DatabaseError", "Error al cargar el driver: ${e.message}", e)
-                null
             } catch (e: Exception) {
                 Log.e("DatabaseError", "Error inesperado: ${e.message}", e)
                 null
             }
         }
     }
-    suspend fun validarUsuario(username: String, password: String): Boolean {
+
+    // Método para validar el usuario
+    suspend fun validarUsuario(username: String, password: String): Pair<Boolean, Int?> {
         return withContext(Dispatchers.IO) {
             try {
-                Class.forName("net.sourceforge.jtds.jdbc.Driver")
                 DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD).use { connection ->
                     val query = """
-                    SELECT * FROM t001_usuarios WHERE f001_Nombre = ? AND f001_contraseña = ?
+                    SELECT f001_ID_usuarios, f001_rol FROM t001_usuarios 
+                    WHERE f001_Nombre = ? AND f001_contraseña = ?
                 """
                     connection.prepareStatement(query).use { preparedStatement ->
                         preparedStatement.setString(1, username)
@@ -171,21 +172,51 @@ object DatabaseHelper {
 
                         val resultSet = preparedStatement.executeQuery()
                         if (resultSet.next()) {
-                            // Se encontró el usuario
-                            return@withContext true
+                            val role = resultSet.getInt("f001_rol")
+                            return@withContext Pair(true, role) // Usuario validado, devuelve el rol
                         } else {
-                            // Usuario no encontrado
-                            return@withContext false
+                            return@withContext Pair(false, null) // Usuario no encontrado
                         }
                     }
                 }
             } catch (e: Exception) {
                 Log.e("DatabaseError", "Error en la validación del usuario: ${e.message}", e)
-                return@withContext false
+                return@withContext Pair(false, null)
             }
         }
     }
 
+    // Método para obtener las horas restringidas del usuario
+    suspend fun getUserRestrictedHours(userId: Int): Pair<Int, Int>? {
+        return withContext(Dispatchers.IO) {
+            try {
+                DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD).use { connection ->
+                    val query = """
+                        SELECT f001_hora_inicio, f001_hora_final
+                        FROM t001_usuarios
+                        WHERE f001_ID_usuarios = ?
+                    """
+                    connection.prepareStatement(query).use { preparedStatement ->
+                        preparedStatement.setInt(1, userId)
+                        val resultSet = preparedStatement.executeQuery()
+                        if (resultSet.next()) {
+                            val startHour = resultSet.getInt("f001_hora_inicio")
+                            val endHour = resultSet.getInt("f001_hora_final")
+                            return@withContext Pair(startHour, endHour)
+                        } else {
+                            null
+                        }
+                    }
+                }
+            } catch (e: SQLException) {
+                Log.e("DatabaseError", "Error SQL: ${e.message}", e)
+                null
+            } catch (e: Exception) {
+                Log.e("DatabaseError", "Error inesperado: ${e.message}", e)
+                null
+            }
+        }
+    }
 }
 
 // Clase de datos para representar la ubicación
@@ -198,3 +229,4 @@ data class LocationInfo(
 )
 
 data class UserSettings(val tiempoEspera: Int, val tiempoMovimiento: Int)
+

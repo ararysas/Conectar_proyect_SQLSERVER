@@ -26,12 +26,12 @@ class UsuariosPantalla2Activity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewUsuarios)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Llama a la función que carga los usuarios con rol 2
-        cargarUsuariosConRol2()
+        // Llama a la función que carga los usuarios con rol 2 y que están activos
+        cargarUsuariosConRol2Activos()
     }
 
-    // Función que carga los usuarios con rol 2 desde la base de datos
-    private fun cargarUsuariosConRol2() {
+    // Función que carga los usuarios con rol 2 que están activos y los ordena por código de despacho
+    private fun cargarUsuariosConRol2Activos() {
         val url = DatabaseConfig.DB_URL
         val user = DatabaseConfig.DB_USER
         val password = DatabaseConfig.DB_PASSWORD
@@ -43,11 +43,15 @@ class UsuariosPantalla2Activity : AppCompatActivity() {
                 // Conexión a la base de datos
                 connection = DriverManager.getConnection(url, user, password)
                 val statement: Statement = connection.createStatement()
-                val resultSet: ResultSet = statement.executeQuery("SELECT * FROM t001_usuarios WHERE f001_rol = 2")
+
+                // Cambiar la consulta SQL para filtrar usuarios con rol 2, que están activos, y ordenarlos por código de despacho de mayor a menor
+                val resultSet: ResultSet = statement.executeQuery(
+                    "SELECT * FROM t001_usuarios WHERE f001_rol = 2 AND f001_activo = 1 ORDER BY f001_co DESC"
+                )
 
                 // Itera sobre los resultados de la consulta
                 while (resultSet.next()) {
-                    val id = resultSet.getString("f001_ID_usuarios") ?: ""
+                    val id = resultSet.getInt("f001_ID_usuarios") // Ahora como Int
                     val nombre = resultSet.getString("f001_Nombre") ?: ""
                     val apellido = resultSet.getString("f001_Apellido") ?: ""
                     val email = resultSet.getString("f001_Email") ?: ""
@@ -57,10 +61,8 @@ class UsuariosPantalla2Activity : AppCompatActivity() {
                     val rol = resultSet.getInt("f001_rol")
                     val movimiento = resultSet.getInt("f001_movimiento")
                     val tiempoEspera = resultSet.getInt("f001_Tiempo_espera")
-                    val co = resultSet.getInt("f001_co")
+                    val co = resultSet.getString("f001_co")
                     val smartphone = resultSet.getString("f001_smartphone") ?: "Sin Smartphone"
-
-                    // Conversión directa a Int para los campos horaInicio y horaFinal
                     val horaInicio = resultSet.getInt("f001_hora_Inicio")
                     val horaFinal = resultSet.getInt("f001_hora_final")
 

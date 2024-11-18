@@ -31,6 +31,19 @@
                 android:layout_centerVertical="true"
             android:src="@drawable/iconoarary" />
 
+            <!-- Ícono ACTUALIZAR -->
+
+            <ImageView
+                android:id="@+id/botonActualizar"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@drawable/negoactaulizar"
+                android:contentDescription="hola"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="20dp"/>
+
+
             <!-- Título del encabezado -->
             <TextView
                 android:id="@+id/tituloTextView"
@@ -89,7 +102,7 @@
                     android:text="CO"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"
-                    android:textColor="@android:color/black"
+                    android:textColor="#4CAF50"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -214,7 +227,7 @@
                     android:layout_height="wrap_content"
                     android:text="Activo"
                     android:textSize="16sp"
-                    android:textColor="@android:color/holo_green_dark" />
+                    android:textColor="#4CAF50" />
             </LinearLayout>
 
             <!-- Fecha de creación -->
@@ -279,11 +292,11 @@
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
 
-            <!-- Movimiento -->
+            <!-- Movimiento: EditText -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+                android:background="@android:color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -301,20 +314,22 @@
                     android:textColor="@android:color/black"
                     android:layout_marginEnd="8dp" />
 
-                <TextView
-                    android:id="@+id/movimientoTextView"
+                <EditText
+                    android:id="@+id/movimientoEditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="MovimientoDesdeBaseDeDatos"
                     android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="8dp"
+                    android:hint="Movimiento"
+                    android:inputType="text" />
             </LinearLayout>
 
-            <!-- Tiempo de Espera -->
+            <!-- Tiempo de Espera: EditText -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+                android:background="@android:color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -332,20 +347,22 @@
                     android:textColor="@android:color/black"
                     android:layout_marginEnd="8dp" />
 
-                <TextView
-                    android:id="@+id/tiempoEsperaTextView"
+                <EditText
+                    android:id="@+id/tiempoEsperaEditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10 minutos"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="8dp"
+                    android:hint="Tiempo de Espera"
+                    android:inputType="number" />
             </LinearLayout>
 
-            <!-- Smartphone -->
+            <!-- Smartphone: EditText -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+                android:background="@android:color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -363,20 +380,22 @@
                     android:textColor="@android:color/black"
                     android:layout_marginEnd="8dp" />
 
-                <TextView
-                    android:id="@+id/smartphoneTextView"
+                <EditText
+                    android:id="@+id/smartphoneEditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Samsung Galaxy"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="8dp"
+                    android:hint="Smartphone"
+                    android:inputType="text" />
             </LinearLayout>
 
-            <!-- Hora de Inicio -->
+            <!-- Hora de Inicio: EditText -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+                android:background="@android:color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -394,20 +413,22 @@
                     android:textColor="@android:color/black"
                     android:layout_marginEnd="8dp" />
 
-                <TextView
-                    android:id="@+id/horaInicioTextView"
+                <EditText
+                    android:id="@+id/horaInicioEditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="08:00"
                     android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="8dp"
+                    android:hint="Hora de Inicio"
+                    android:inputType="datetime" />
             </LinearLayout>
 
-            <!-- Hora Final -->
+            <!-- Hora Final: EditText -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray" /> <!-- Línea de separación -->
+                android:background="@android:color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -425,14 +446,17 @@
                     android:textColor="@android:color/black"
                     android:layout_marginEnd="8dp" />
 
-                <TextView
-                    android:id="@+id/horaFinalTextView"
+                <EditText
+                    android:id="@+id/horaFinalEditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="17:00"
                     android:textSize="16sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:textColor="@android:color/black"
+                    android:layout_marginStart="8dp"
+                    android:hint="Hora Final"
+                    android:inputType="datetime" />
             </LinearLayout>
+
 
 
         </LinearLayout>

@@ -11,8 +11,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,39 +18,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-    tools:targetApi="31">
+        tools:targetApi="31">
 
-    <!-- Actividad principal -->
-    <activity
-        android:name=".MainActivity"
-        android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
+        <!-- Actividad principal -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-    <!-- Actividad de inicio de sesión -->
-    <activity
-        android:name=".Usuarios.LoginActivity"
-        android:exported="true" />
+        <!-- Actividad de inicio de sesión -->
+        <activity
+            android:name=".Usuarios.LoginActivity"
+            android:exported="true" />
 
-    <!-- Segunda actividad (Pantalla de usuarios) -->
-    <activity
-        android:name=".Usuarios.UsuariosPantalla2Activity"
-        android:exported="false" />
-        <!-- actividad vsita detalle) -->
-        <activity android:name=".DetalleUsuarioActivity"></activity>
+        <!-- Segunda actividad (Pantalla de usuarios) -->
+        <activity
+            android:name=".Usuarios.UsuariosPantalla2Activity"
+            android:exported="false" />
 
+        <!-- Actividad de vista detalle -->
+        <activity
+            android:name=".DetalleUsuarioActivity"
+            android:exported="false" />
 
         <!-- Servicio de ubicación -->
-    <service
-        android:name=".LocationService"
-        android:exported="false"
-        android:foregroundServiceType="location"
-        android:permission="android.permission.FOREGROUND_SERVICE"
-        tools:ignore="ForegroundServicePermission" />
+        <service
+            android:name=".LocationService"
+            android:exported="false"
+            android:foregroundServiceType="location"
+            android:permission="android.permission.FOREGROUND_SERVICE"
+            tools:ignore="ForegroundServicePermission" />
 
+        <!-- Recepción de eventos de inicio -->
+        <receiver android:name=".BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.REBOOT" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
-</application>
-    </manifest>
+    </application>
+</manifest>
