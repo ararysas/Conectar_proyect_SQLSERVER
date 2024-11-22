@@ -57,12 +57,12 @@ object UserDatabaseHelper {
                     setInt(5, usuario.rol)
                     setInt(6, usuario.tiempoEspera)  // Tiempo de espera en minutos
                     setString(7, usuario.co)
-                    setString(8, usuario.smartphone ?: "Sin Smartphone")  // Valor por defecto si es null
+                    setString(8, usuario.smartphone ?: "Sin Smartphone")
                     setInt(9, usuario.movimiento)
                     setString(10, usuario.contraseña)
-                    setInt(11, usuario.horaInicio)  // Hora de inicio (formato numérico)
-                    setInt(12, usuario.horaFinal)   // Hora de finalización (formato numérico)
-                    setInt(13, usuario.id)  // ID del usuario para identificar el registro
+                    setInt(11, usuario.horaInicio)
+                    setInt(12, usuario.horaFinal)
+                    setInt(13, usuario.id)
                 }
 
                 // Ejecutar la actualización y verificar si se actualizó alguna fila

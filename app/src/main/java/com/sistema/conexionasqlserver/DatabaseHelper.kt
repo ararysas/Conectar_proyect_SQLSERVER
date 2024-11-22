@@ -93,39 +93,6 @@ object DatabaseHelper {
         }
     }
 
-    // Método para obtener la configuración del usuario
-    suspend fun getUserSettings(userId: Int): UserSettings? {
-        return withContext(Dispatchers.IO) {
-            try {
-                DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD).use { connection ->
-                    val query = """
-                        SELECT f001_Tiempo_espera, f001_movimiento 
-                        FROM t001_usuarios 
-                        WHERE f001_ID_usuarios = ?
-                    """
-                    connection.prepareStatement(query).use { preparedStatement ->
-                        preparedStatement.setInt(1, userId)
-                        val resultSet = preparedStatement.executeQuery()
-                        if (resultSet.next()) {
-                            val tiempoEspera = resultSet.getInt("f001_Tiempo_espera")
-                            val tiempoMovimiento = resultSet.getInt("f001_movimiento")
-
-                            UserSettings(tiempoEspera, tiempoMovimiento)
-                        } else {
-                            null
-                        }
-                    }
-                }
-            } catch (e: SQLException) {
-                Log.e("DatabaseError", "Error SQL: ${e.message}", e)
-                null
-            } catch (e: Exception) {
-                Log.e("DatabaseError", "Error inesperado: ${e.message}", e)
-                null
-            }
-        }
-    }
-
     // Método para obtener las últimas coordenadas del usuario
     suspend fun getLastCoordinates(userId: Int): String? {
         return withContext(Dispatchers.IO) {
@@ -197,6 +164,7 @@ object DatabaseHelper {
                         WHERE f001_ID_usuarios = ?
                     """
                     connection.prepareStatement(query).use { preparedStatement ->
+
                         preparedStatement.setInt(1, userId)
                         val resultSet = preparedStatement.executeQuery()
                         if (resultSet.next()) {
@@ -228,5 +196,5 @@ data class LocationInfo(
     val codigo: Int
 )
 
-data class UserSettings(val tiempoEspera: Int, val tiempoMovimiento: Int)
+
 

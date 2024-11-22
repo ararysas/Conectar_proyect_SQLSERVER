@@ -28,10 +28,10 @@ class DetalleUsuarioActivity : AppCompatActivity() {
     private lateinit var rolTextView: TextView
     private lateinit var coTextView: TextView
     private lateinit var contraseñaTextView: TextView
+    private lateinit var tiempoEsperaTextView: TextView
+    private lateinit var movimientoTextView: TextView
 
     // EditText para campos editables
-    private lateinit var tiempoEsperaEditText: EditText
-    private lateinit var movimientoEditText: EditText
     private lateinit var smartphoneEditText: EditText
     private lateinit var horaInicioEditText: EditText
     private lateinit var horaFinalEditText: EditText
@@ -92,9 +92,10 @@ class DetalleUsuarioActivity : AppCompatActivity() {
         rolTextView = findViewById(R.id.rolTextView)
         coTextView = findViewById(R.id.coTextView)
         contraseñaTextView = findViewById(R.id.contraseñaTextView)
+        tiempoEsperaTextView  = findViewById(R.id.tiempoEsperaTextView)
+        movimientoTextView  = findViewById(R.id.movimientoTextView)
 
-        tiempoEsperaEditText = findViewById(R.id.tiempoEsperaEditText)
-        movimientoEditText = findViewById(R.id.movimientoEditText)
+        // campos editables TextView
         smartphoneEditText = findViewById(R.id.smartphoneEditText)
         horaInicioEditText = findViewById(R.id.horaInicioEditText)
         horaFinalEditText = findViewById(R.id.horaFinalEditText)
@@ -111,11 +112,13 @@ class DetalleUsuarioActivity : AppCompatActivity() {
         fechaCreaTextView.text = usuario.fechaCrea
         rolTextView.text = usuario.rol.toString()
 
+
         // Concatenar " minutos" a los valores de tiempoEspera y movimiento
-        tiempoEsperaEditText.setText("${usuario.tiempoEspera} minutos")
-        movimientoEditText.setText("${usuario.movimiento} minutos")
+        tiempoEsperaTextView .setText("${usuario.tiempoEspera} minutos")
+        movimientoTextView .setText("${usuario.movimiento} minutos")
 
         smartphoneEditText.setText(usuario.smartphone ?: "Sin Smartphone")
+
         // Concatenar AM y PM directamente
         horaInicioEditText.setText("${usuario.horaInicio}:00AM")
         horaFinalEditText.setText("${usuario.horaFinal}:00PM")
@@ -128,8 +131,8 @@ class DetalleUsuarioActivity : AppCompatActivity() {
         usuarioViewModel.usuarioLiveData.value?.let { user ->
             // Crear un nuevo objeto Usuario con los valores actualizados
             val usuarioActualizado = user.copy(
-                tiempoEspera = tiempoEsperaEditText.text.toString().replace(" minutos", "").toIntOrNull() ?: user.tiempoEspera,
-                movimiento = movimientoEditText.text.toString().replace(" minutos", "").toIntOrNull() ?: user.movimiento,
+                tiempoEspera = tiempoEsperaTextView .text.toString().replace(" minutos", "").toIntOrNull() ?: user.tiempoEspera,
+                movimiento = movimientoTextView .text.toString().replace(" minutos", "").toIntOrNull() ?: user.movimiento,
                 smartphone = smartphoneEditText.text.toString(),
                 horaInicio = horaInicioEditText.text.toString().replace(":00AM", "").toIntOrNull() ?: user.horaInicio,
                 horaFinal = horaFinalEditText.text.toString().replace(":00PM", "").toIntOrNull() ?: user.horaFinal

@@ -36,7 +36,8 @@ class LocationService : Service() {
         // Inicializar el LocationManagerHelper
         LocationManagerHelper.initialize(this)
 
-        checkUserCredentials()
+        // Verificar si el servicio fue reiniciado y recuperar el estado si es necesario
+        checkAndRestoreUserTrackingState()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -83,7 +84,6 @@ class LocationService : Service() {
 
     private fun saveLocation(userId: Int, nota: String, codigo: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            // Verificar si está dentro del horario restringido usando UserTimeZoneHelper
             if (UserTimeZoneHelper.isWithinRestrictedHours(applicationContext, userId)) {
                 val userTracker = userTrackers[userId]
                 userTracker?.lastLocation?.let { lastLocation ->
@@ -110,6 +110,30 @@ class LocationService : Service() {
         }
     }
 
+    private fun checkAndRestoreUserTrackingState() {
+        val userId = getUserIdFromPreferences()
+        val lastLocation = getLastSavedLocation(userId)
+        if (lastLocation != null) {
+            Log.d("LocationService", "Restaurando ubicación del usuario $userId desde SharedPreferences: $lastLocation")
+            userTrackers[userId]?.lastLocation = lastLocation
+            userTrackers[userId]?.startTracking(fusedLocationClient)
+        }
+    }
+
+    private fun getLastSavedLocation(userId: Int): Location? {
+        val latitude = sharedPreferences.getFloat("LAST_LATITUDE_$userId", Float.NaN)
+        val longitude = sharedPreferences.getFloat("LAST_LONGITUDE_$userId", Float.NaN)
+
+        return if (!latitude.isNaN() && !longitude.isNaN()) {
+            Location("").apply {
+                this.latitude = latitude.toDouble()
+                this.longitude = longitude.toDouble()
+            }
+        } else {
+            null
+        }
+    }
+
     private fun checkUserCredentials() {
         val username = sharedPreferences.getString("username", null)
         val password = sharedPreferences.getString("password", null)
@@ -133,10 +157,18 @@ class LocationService : Service() {
                 val lastLocation = userTrackers[userId]?.lastLocation
                 if (lastLocation != null) {
                     Log.d("LocationService", "Dispositivo apagándose. Última ubicación: ${lastLocation.latitude}, ${lastLocation.longitude}")
-                    saveLocation(userId, "Dispositivo apagado o Reiniciado", 3) // Código 3 para "dispositivo apagado"
+                    saveLocation(userId, "Dispositivo apagado o Reiniciado", 3)
+                    saveLocationInPreferences(userId, lastLocation)  // Guardar en SharedPreferences
                 }
             }
         }
+    }
+
+    private fun saveLocationInPreferences(userId: Int, location: Location) {
+        val editor = sharedPreferences.edit()
+        editor.putFloat("LAST_LATITUDE_$userId", location.latitude.toFloat())
+        editor.putFloat("LAST_LONGITUDE_$userId", location.longitude.toFloat())
+        editor.apply()
     }
 
     inner class UserTracker(private val userId: Int, private val onSaveLocation: (String, Int) -> Unit) {
@@ -148,7 +180,7 @@ class LocationService : Service() {
         fun startTracking(fusedLocationClient: FusedLocationProviderClient) {
             startLocationUpdates(fusedLocationClient)
 
-            // Programar la verificación cada minuto
+            // Verificación cada 1 minuto
             handler.postDelayed(object : Runnable {
                 override fun run() {
                     checkLocationAndSave()
@@ -166,12 +198,24 @@ class LocationService : Service() {
                 if (currentLocation != null) {
                     when {
                         !internetAvailable -> {
-                            // Guardar ubicación en SQLite si no hay Internet
                             LocationManagerHelper.saveLocationLocally(applicationContext, userId, currentLocation, "Sin Internet")
                         }
                         !gpsOn -> {
-                            // Guardar ubicación en SQLite si el GPS está desactivado
                             LocationManagerHelper.saveLocationLocally(applicationContext, userId, currentLocation, "GPS Apagado")
+                        }
+                        else -> {
+                            val distance = lastLocation?.distanceTo(currentLocation) ?: 0f
+                            val currentTime = System.currentTimeMillis()
+
+                            if (distance > 100) {
+                                // Se guarda la ubicación si el usuario se movió más de 100 metros
+                                onSaveLocation("Usuario en movimiento", 2)
+                                lastSavedTime = currentTime
+                            } else if (currentTime - lastSavedTime >= interval) {
+                                // Si el usuario está en el mismo lugar, pero ha pasado un minuto, se guarda
+                                onSaveLocation("Usuario mismo lugar", 1)
+                                lastSavedTime = currentTime
+                            }
                         }
                     }
                 } else {
@@ -201,20 +245,18 @@ class LocationService : Service() {
             val previousLocation = lastLocation
             val currentTime = System.currentTimeMillis()
 
-            if (previousLocation == null) {
+            if (previousLocation == null || (currentTime - lastSavedTime >= interval)) {
                 lastLocation = newLocation
                 lastSavedTime = currentTime
-                onSaveLocation("Usuario mismo lugar", 1)
-            } else {
-                val distance = newLocation.distanceTo(previousLocation)
-                if (distance > 100 && (currentTime - lastSavedTime >= interval)) {
-                    lastLocation = newLocation
-                    lastSavedTime = currentTime
+
+                val distance = previousLocation?.distanceTo(newLocation) ?: 0f
+                if (distance > 100) {
                     onSaveLocation("Usuario en movimiento", 2)
-                } else if (currentTime - lastSavedTime >= interval) {
+                } else {
                     onSaveLocation("Usuario mismo lugar", 1)
-                    lastSavedTime = currentTime
                 }
+            } else {
+                Log.d("UserTracker", "Ubicación no guardada: todavía no ha pasado un minuto completo.")
             }
         }
 

@@ -292,7 +292,7 @@
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
 
-            <!-- Movimiento: EditText -->
+            <!-- Movimiento: TextView -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -314,8 +314,8 @@
                     android:textColor="@android:color/black"
                     android:layout_marginEnd="8dp" />
 
-                <EditText
-                    android:id="@+id/movimientoEditText"
+                <TextView
+                    android:id="@+id/movimientoTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -325,7 +325,7 @@
                     android:inputType="text" />
             </LinearLayout>
 
-            <!-- Tiempo de Espera: EditText -->
+            <!-- Tiempo de Espera: TextView -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -347,8 +347,8 @@
                     android:textColor="@android:color/black"
                     android:layout_marginEnd="8dp" />
 
-                <EditText
-                    android:id="@+id/tiempoEsperaEditText"
+                <TextView
+                    android:id="@+id/tiempoEsperaTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"

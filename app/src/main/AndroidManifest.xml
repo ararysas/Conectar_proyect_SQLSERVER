@@ -53,8 +53,9 @@
             android:permission="android.permission.FOREGROUND_SERVICE"
             tools:ignore="ForegroundServicePermission" />
 
-        <!-- Recepción de eventos de inicio -->
-        <receiver android:name=".BootReceiver"
+        <!-- Recepción de eventos de inicio (Reinicio del dispositivo) -->
+        <receiver
+            android:name=".BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -63,6 +64,11 @@
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+
+
+        <!-- Receiver para cambios de conectividad -->
+
 
     </application>
 </manifest>
